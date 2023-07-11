@@ -1,7 +1,8 @@
 {{#each posts}}
-
-  <h2>{{title}}</h2>
-  <p>{{createdAt}}</p>
-  <!-- Add edit and delete buttons for each blog post -->
+  <div class="blog-post">
+    <h2><a href="/dashboard/post/{{id}}/edit">{{title}}</a></h2>
+    <p>Date: {{formatDate createdAt}}</p>
+  </div>
 {{/each}}
+
 <a href="/dashboard/new">Add New Blog Post</a>
