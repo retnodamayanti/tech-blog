@@ -3,6 +3,7 @@ const session = require('express-session');
 const path = require('path');
 const exphbs = require('express-handlebars');
 const withAuth = require('./utils/auth');
+const helpers = require('./utils/helpers');
 
 // Import routes and models
 const { homeRoutes, dashboardRoutes, authRoutes } = require('./controllers');
@@ -38,6 +39,9 @@ app.engine(
     partialsDir: path.join(__dirname, 'views/partials'),
     runtimeOptions: {
       allowProtoPropertiesByDefault: true,
+    },
+    helpers: {
+      formatDate: helpers.formatDate, 
     },
   })
 );
