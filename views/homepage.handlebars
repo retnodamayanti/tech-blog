@@ -1,0 +1,10 @@
+<!-- homepage.handlebars -->
+<h1>Homepage</h1>
+{{#each posts}}
+  <div>
+    <h2><a href="/dashboard/post/{{ id }}">{{ title }}</a></h2>
+    <p>{{ content }}</p>
+    <p>Created by: {{ User.username }}</p>
+    <p>Date: {{ createdAt }}</p>
+  </div>
+{{/each}}
