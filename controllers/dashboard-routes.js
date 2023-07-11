@@ -1,14 +1,15 @@
 const express = require('express');
 const router = express.Router();
 
-const { Post, User } = require('../models');
+const { Post, User, Comment } = require('../models');
+
 
 // Dashboard route
 router.get('/', async (req, res) => {
   try {
     // Fetch the user's blog posts
     const userId = req.session.userId;
-    const posts = await Post.findAll({ where: { user_id: userId } });
+    const posts = await Post.findAll({ where: { userId }, include: User });
 
     // Render the dashboard template with the fetched blog posts
     res.render('dashboard', { posts });
@@ -18,16 +19,21 @@ router.get('/', async (req, res) => {
   }
 });
 
+
 // View single blog post route
 router.get('/post/:id', async (req, res) => {
   try {
     const postId = req.params.id;
 
-    // Find the blog post by ID, include the associated user model
-    const post = await Post.findByPk(postId, { include: User });
+    // Find the blog post by ID, include the associated user model and comments
+    const post = await Post.findByPk(postId, {
+      include: [
+        { model: User, include: { model: Comment, include: User } },
+      ],
+    });
 
     if (post) {
-      res.render('singlePost', { post });
+      res.render('singlePost', { post, session: req.session });
     } else {
       res.status(404).json({ message: 'Post not found' });
     }
@@ -36,6 +42,7 @@ router.get('/post/:id', async (req, res) => {
     res.status(500).json({ message: 'Server Error' });
   }
 });
+
 
 // New blog post route
 router.get('/new', (req, res) => {
@@ -59,7 +66,7 @@ router.post('/', async (req, res) => {
 });
 
 // Edit blog post route
-router.get('/:id/edit', async (req, res) => {
+router.get('/post/:id/edit', async (req, res) => {
   try {
     const postId = req.params.id;
 
@@ -75,7 +82,7 @@ router.get('/:id/edit', async (req, res) => {
 });
 
 // Update blog post route
-router.put('/:id', async (req, res) => {
+router.post('/post/:id', async (req, res) => {
   try {
     const postId = req.params.id;
 
@@ -83,7 +90,7 @@ router.put('/:id', async (req, res) => {
     const { title, content } = req.body;
     await Post.update({ title, content }, { where: { id: postId } });
 
-    // Redirect to the dashboard
+    // Redirect to the dashboard or the updated blog post page
     res.redirect('/dashboard');
   } catch (err) {
     console.error(err);
@@ -91,8 +98,10 @@ router.put('/:id', async (req, res) => {
   }
 });
 
+
+
 // Delete blog post route
-router.delete('/:id', async (req, res) => {
+router.delete('/post/:id', async (req, res) => {
   try {
     const postId = req.params.id;
 
@@ -107,26 +116,38 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
+
 // Create comment route
 router.post('/post/:id/comment', async (req, res) => {
   try {
     const postId = req.params.id;
     const { content } = req.body;
-    
+
     // Create a new comment associated with the blog post and the logged-in user
     const comment = await Comment.create({
       content,
       postId,
-      userId: req.session.userId
+      userId: req.session.userId,
     });
-    
-    // Redirect back to the single post view
-    res.redirect(`/dashboard/post/${postId}`);
+
+    // Fetch the associated post and include the user and comments
+    const post = await Post.findByPk(postId, {
+      include: [{ model: User }, { model: Comment, include: [User] }],
+    });
+
+    if (post) {      
+      res.render('singlePost', { post, session: req.session });
+    } else {
+      res.status(404).json({ message: 'Post not found' });
+    }
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server Error' });
   }
 });
+
+
+
 
 
 module.exports = router;
