@@ -1,9 +1,8 @@
 <!-- homepage.handlebars -->
-<h1>Homepage</h1>
 {{#each posts}}
-  <div>
-    <h2><a href="/dashboard/post/{{ id }}">{{ title }}</a></h2>
-    <p>{{ content }}</p>
-    <p>Created by: {{ user.username }} on {{ formatDate createdAt }}</p>
+  <div class="card mb-4">
+    <h2 class="card-header"><a href="/dashboard/post/{{ id }}">{{ title }}</a></h2>
+    <p class="card-body">{{ content }}</p>
+    <p class="text-muted fst-italic mb-2">Created by: {{ user.username }} on {{ formatDate createdAt }}</p>    
   </div>
 {{/each}}

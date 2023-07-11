@@ -1,9 +1,11 @@
-<!-- singlePost.handlebars -->
+<div class="card mb-4">
 <h1>{{ post.title }}</h1>
 <p>{{ post.content }}</p>
 <p>Created by: {{ post.user.username }}</p>
 <p>Date: {{ formatDate post.createdAt }}</p>
+</div>
 
+<div class="card mb-4">
 <h2>Comments</h2>
 {{#each post.comments}}
   <div>
@@ -13,7 +15,9 @@
 {{/each}}
 
 <!-- Add comment form -->
+<div class="card mb-4">
 <form action="/dashboard/post/{{ post.id }}/comment" method="POST">
   <input type="text" name="content" placeholder="Leave a comment" required>
   <button type="submit">Submit</button>
 </form>
+</div>
