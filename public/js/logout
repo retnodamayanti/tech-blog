@@ -1,0 +1,23 @@
+const logoutBtn = document.getElementById('logout-btn');
+
+if (logoutBtn) {
+  logoutBtn.addEventListener('click', () => {
+    fetch('/auth/logout', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          // Redirect to the homepage after successful logout
+          window.location.href = '/';
+        } else {
+          console.error('Failed to log out');
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  });
+}
