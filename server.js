@@ -83,7 +83,6 @@ app.use('/auth', (req, res, next) => {
   next();
 }, authRoutes);
 
-// Start the server
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+sequelize.sync({ force: false }).then(() => {
+  app.listen(PORT, () => console.log(`Server is running on http://localhost:${PORT}`));
 });
