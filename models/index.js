@@ -7,6 +7,7 @@ const User = require('./user');
 // Define associations
 User.hasMany(Post, {
   foreignKey: 'userId',
+  as: 'posts',
 });
 Post.belongsTo(User, {
   foreignKey: 'userId',
