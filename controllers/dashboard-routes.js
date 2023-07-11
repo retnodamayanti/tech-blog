@@ -74,7 +74,7 @@ router.get('/post/:id/edit', async (req, res) => {
     const post = await Post.findByPk(postId);
 
     // Render the edit blog post form template with the fetched blog post
-    res.render('editBlogPost', { post });
+    res.render('editblogpost', { post });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server Error' });
