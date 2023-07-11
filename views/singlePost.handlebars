@@ -1,0 +1,19 @@
+<!-- singlePost.handlebars -->
+<h1>{{ post.title }}</h1>
+<p>{{ post.content }}</p>
+<p>Created by: {{ post.user.username }}</p>
+<p>Date: {{ formatDate post.createdAt }}</p>
+
+<h2>Comments</h2>
+{{#each post.comments}}
+  <div>
+    <p>{{ this.content }}</p>
+    <p>- {{ this.user.username }}, {{ formatDate this.createdAt }}</p>
+  </div>
+{{/each}}
+
+<!-- Add comment form -->
+<form action="/dashboard/post/{{ post.id }}/comment" method="POST">
+  <input type="text" name="content" placeholder="Leave a comment" required>
+  <button type="submit">Submit</button>
+</form>
